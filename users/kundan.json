@@ -1,0 +1,943 @@
+{
+ "v": 4,
+ "id": "kundan",
+ "name": "Kundan Wadje",
+ "gender": "m",
+ "created": 1791732522437,
+ "updated": 1791732522437,
+ "profile": {
+  "name": "Kundan Wadje",
+  "goalWeight": "",
+  "bar": 20,
+  "plates": [
+   25,
+   20,
+   15,
+   10,
+   5,
+   2.5,
+   1.25
+  ]
+ },
+ "settings": {
+  "rest": 30,
+  "autoRest": true,
+  "wake": false,
+  "voice": true,
+  "sound": true
+ },
+ "bodyweight": [],
+ "active": null,
+ "cur": "gym",
+ "sections": {
+  "gym": {
+   "variant": "m",
+   "plans": [
+    {
+     "id": "trainer",
+     "name": "Trainer plan",
+     "source": "trainer",
+     "created": 1791732522438,
+     "note": "Your 6-day beginner plan from your trainer. 30–45 s rest between sets, program change after 8 active weeks.",
+     "days": [
+      {
+       "id": "d1",
+       "name": "Day 1, Upper body",
+       "items": [
+        {
+         "ex": "cardio",
+         "rest": 0,
+         "sets": 1,
+         "time": 300
+        },
+        {
+         "ex": "pushup",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "chestpress",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "pecfly",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "latpull",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "suprow",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "shpress",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "frenchpress",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "dips",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "dbcurl",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "revcurl",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "stretchUp",
+         "rest": 0,
+         "sets": 1,
+         "reps": "",
+         "hold": 5
+        }
+       ]
+      },
+      {
+       "id": "d2",
+       "name": "Day 2, Lower body",
+       "items": [
+        {
+         "ex": "cardio",
+         "rest": 0,
+         "sets": 1,
+         "time": 300
+        },
+        {
+         "ex": "freesquat",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "supersquat",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "racksquat",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "adductor",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "legpress",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "legcurl",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "calfstand",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "stretchLow",
+         "rest": 0,
+         "sets": 1,
+         "reps": "",
+         "hold": 10
+        }
+       ]
+      },
+      {
+       "id": "d3",
+       "name": "Day 3, Cardio & abs",
+       "items": [
+        {
+         "ex": "crosstrainer",
+         "rest": 0,
+         "sets": 1,
+         "time": 900
+        },
+        {
+         "ex": "battlerope",
+         "rest": 40,
+         "sets": 3,
+         "reps": "50 alt"
+        },
+        {
+         "ex": "crunch",
+         "rest": 40,
+         "sets": 3,
+         "reps": "12"
+        },
+        {
+         "ex": "revcrunch",
+         "rest": 40,
+         "sets": 3,
+         "reps": "12"
+        },
+        {
+         "ex": "sidecrunch",
+         "rest": 40,
+         "sets": 3,
+         "reps": "12/side"
+        },
+        {
+         "ex": "sidebend",
+         "rest": 40,
+         "sets": 3,
+         "reps": "12/side"
+        },
+        {
+         "ex": "plank",
+         "rest": 0,
+         "sets": 1,
+         "time": 60
+        },
+        {
+         "ex": "spinbike",
+         "rest": 0,
+         "sets": 1,
+         "time": 900
+        },
+        {
+         "ex": "hyper",
+         "rest": 40,
+         "sets": 1,
+         "reps": "10 + hold"
+        }
+       ]
+      },
+      {
+       "id": "d4",
+       "name": "Day 4, Upper body",
+       "items": [
+        {
+         "ex": "cardio",
+         "rest": 0,
+         "sets": 1,
+         "time": 300
+        },
+        {
+         "ex": "pushup",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "benchpress",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "inclinedb",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "pullup",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "closepull",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "shrug",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "frontraise",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "reardelt",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "lyingfrench",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "dips",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "hammer",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "preacher",
+         "rest": 40,
+         "sets": 2,
+         "reps": "15"
+        },
+        {
+         "ex": "stretchUp",
+         "rest": 0,
+         "sets": 1,
+         "reps": "",
+         "hold": 10
+        }
+       ]
+      },
+      {
+       "id": "d5",
+       "name": "Day 5, Lower body",
+       "items": [
+        {
+         "ex": "cardio",
+         "rest": 0,
+         "sets": 1,
+         "time": 300
+        },
+        {
+         "ex": "widesquat",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "lunge",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "stepup",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "abductor",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "legext",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "legcurl",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "calfseated",
+         "rest": 40,
+         "sets": 2,
+         "reps": "20"
+        },
+        {
+         "ex": "stretchLow",
+         "rest": 0,
+         "sets": 1,
+         "reps": "",
+         "hold": 10
+        }
+       ]
+      },
+      {
+       "id": "d6",
+       "name": "Day 6, Cardio & abs",
+       "items": [
+        {
+         "ex": "crosstrainer",
+         "rest": 0,
+         "sets": 1,
+         "time": 900
+        },
+        {
+         "ex": "battlerope",
+         "rest": 40,
+         "sets": 3,
+         "reps": "50 alt"
+        },
+        {
+         "ex": "crunch",
+         "rest": 40,
+         "sets": 3,
+         "reps": "12"
+        },
+        {
+         "ex": "revcrunch",
+         "rest": 40,
+         "sets": 3,
+         "reps": "12"
+        },
+        {
+         "ex": "sidecrunch",
+         "rest": 40,
+         "sets": 3,
+         "reps": "12/side"
+        },
+        {
+         "ex": "sidebend",
+         "rest": 40,
+         "sets": 3,
+         "reps": "12/side"
+        },
+        {
+         "ex": "plank",
+         "rest": 0,
+         "sets": 1,
+         "time": 60
+        },
+        {
+         "ex": "spinbike",
+         "rest": 0,
+         "sets": 1,
+         "time": 900
+        },
+        {
+         "ex": "hyper",
+         "rest": 40,
+         "sets": 1,
+         "reps": "10 + hold"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "activePlan": "trainer",
+   "history": [],
+   "customEx": {},
+   "media": {},
+   "dismissed": {},
+   "prefs": null,
+   "extra": {
+    "holds": [],
+    "fav": [],
+    "mood": []
+   }
+  },
+  "home": {
+   "variant": "m",
+   "plans": [
+    {
+     "id": "t1wq0g3a6ec",
+     "name": "Starter home workout",
+     "source": "template",
+     "prefs": {
+      "goal": "fitness",
+      "days": 3,
+      "level": "b",
+      "minutes": 45,
+      "equipment": "home",
+      "focus": [],
+      "avoid": [],
+      "seed": 7,
+      "gender": "m"
+     },
+     "created": 1791732522468,
+     "note": "Three full-body days train each muscle 3 times a week with plenty of recovery between. General fitness: 3 sets of 10-12 on big lifts, 12-15 on smaller ones, about 60 s rest.",
+     "days": [
+      {
+       "id": "d1",
+       "name": "Full body",
+       "items": [
+        {
+         "ex": "w_march",
+         "sets": 1,
+         "time": 180,
+         "rest": 0
+        },
+        {
+         "ex": "freesquat",
+         "sets": 3,
+         "reps": "10-12",
+         "rest": 60
+        },
+        {
+         "ex": "ds:3216",
+         "sets": 3,
+         "reps": "10-12",
+         "rest": 60
+        },
+        {
+         "ex": "ds:3158",
+         "sets": 3,
+         "reps": "10-12",
+         "rest": 60
+        },
+        {
+         "ex": "ds:3013",
+         "sets": 3,
+         "reps": "10-12",
+         "rest": 60
+        },
+        {
+         "ex": "stretchUp",
+         "sets": 1,
+         "hold": 20,
+         "rest": 0
+        }
+       ]
+      },
+      {
+       "id": "d2",
+       "name": "Full body B",
+       "items": [
+        {
+         "ex": "w_march",
+         "sets": 1,
+         "time": 180,
+         "rest": 0
+        },
+        {
+         "ex": "freesquat",
+         "sets": 3,
+         "reps": "10-12",
+         "rest": 60
+        },
+        {
+         "ex": "ds:0493",
+         "sets": 3,
+         "reps": "10-12",
+         "rest": 60
+        },
+        {
+         "ex": "ds:3418",
+         "sets": 3,
+         "reps": "10-12",
+         "rest": 60
+        },
+        {
+         "ex": "ds:3470",
+         "sets": 3,
+         "reps": "10-12",
+         "rest": 60
+        },
+        {
+         "ex": "stretchUp",
+         "sets": 1,
+         "hold": 20,
+         "rest": 0
+        }
+       ]
+      },
+      {
+       "id": "d3",
+       "name": "Full body C",
+       "items": [
+        {
+         "ex": "w_march",
+         "sets": 1,
+         "time": 180,
+         "rest": 0
+        },
+        {
+         "ex": "ds:3523",
+         "sets": 3,
+         "reps": "10-12",
+         "rest": 60
+        },
+        {
+         "ex": "pushup",
+         "sets": 3,
+         "reps": "10-12",
+         "rest": 60
+        },
+        {
+         "ex": "ds:0808",
+         "sets": 3,
+         "reps": "10-12",
+         "rest": 60
+        },
+        {
+         "ex": "freesquat",
+         "sets": 3,
+         "reps": "10-12",
+         "rest": 60
+        },
+        {
+         "ex": "ds:3168",
+         "sets": 3,
+         "reps": "10-12",
+         "rest": 60
+        },
+        {
+         "ex": "stretchUp",
+         "sets": 1,
+         "hold": 20,
+         "rest": 0
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "activePlan": "t1wq0g3a6ec",
+   "history": [],
+   "customEx": {},
+   "media": {},
+   "dismissed": {},
+   "prefs": null,
+   "extra": {
+    "holds": [],
+    "fav": [],
+    "mood": []
+   }
+  },
+  "yoga": {
+   "variant": "m",
+   "plans": [
+    {
+     "id": "ra4q0f2a6ei",
+     "name": "Starter yoga",
+     "source": "template",
+     "prefs": {
+      "goal": "flex",
+      "level": "b",
+      "days": 3,
+      "minutes": 20,
+      "time": "any",
+      "avoid": [],
+      "seed": 7
+     },
+     "created": 1791732522474,
+     "note": "3 flows of about 20 minutes to rotate through, 3 days a week. Each starts with breathing, warms up, builds to the main poses and ends in relaxation.",
+     "days": [
+      {
+       "id": "d1",
+       "name": "Flexibility flow",
+       "items": [
+        {
+         "ex": "b_coherent",
+         "rounds": 8
+        },
+        {
+         "ex": "y_catcow",
+         "hold": 40
+        },
+        {
+         "ex": "y_shoulderroll",
+         "hold": 30
+        },
+        {
+         "ex": "y_sunsal",
+         "hold": 120
+        },
+        {
+         "ex": "y_sidestretch",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_lowlunge",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_goddess",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_triangle",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_warrior2",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_halflift",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_seatedfold",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_cobra",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_camel",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_bridge",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_pigeon",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_seatedtwist",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_kneeschest",
+         "hold": 40
+        },
+        {
+         "ex": "y_savasana",
+         "hold": 120
+        }
+       ]
+      },
+      {
+       "id": "d2",
+       "name": "Hip & hamstring flow",
+       "items": [
+        {
+         "ex": "b_anulom",
+         "rounds": 5
+        },
+        {
+         "ex": "y_catcow",
+         "hold": 40
+        },
+        {
+         "ex": "y_shoulderroll",
+         "hold": 30
+        },
+        {
+         "ex": "y_sunsal",
+         "hold": 120
+        },
+        {
+         "ex": "y_sidestretch",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_warrior1",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_lowlunge",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_warrior2",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_triangle",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_mountain",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_plank",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_forwardfold",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_halflift",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_seatedfold",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_sphinx",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_seatedtwist",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_kneeschest",
+         "hold": 40
+        },
+        {
+         "ex": "y_savasana",
+         "hold": 120
+        }
+       ]
+      },
+      {
+       "id": "d3",
+       "name": "Full-body stretch",
+       "items": [
+        {
+         "ex": "b_belly",
+         "rounds": 9
+        },
+        {
+         "ex": "y_catcow",
+         "hold": 40
+        },
+        {
+         "ex": "y_neck",
+         "hold": 40
+        },
+        {
+         "ex": "y_sunsal",
+         "hold": 120
+        },
+        {
+         "ex": "y_lowlunge",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_sidestretch",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_warrior2",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_warrior1",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_triangle",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_halflift",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_forwardfold",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_seatedfold",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_camel",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_cobra",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_sphinx",
+         "hold": 30,
+         "sides": false
+        },
+        {
+         "ex": "y_seatedtwist",
+         "hold": 30,
+         "sides": true
+        },
+        {
+         "ex": "y_kneeschest",
+         "hold": 40
+        },
+        {
+         "ex": "y_savasana",
+         "hold": 120
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "activePlan": "ra4q0f2a6ei",
+   "history": [],
+   "customEx": {},
+   "media": {},
+   "dismissed": {},
+   "prefs": null,
+   "extra": {
+    "holds": [],
+    "fav": [],
+    "mood": []
+   }
+  }
+ }
+}
