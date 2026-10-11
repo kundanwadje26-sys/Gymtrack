@@ -492,6 +492,21 @@ body:not([data-th^="yoga"]) .br-blob{fill:rgba(var(--acc),.55)}
 .holdbtn.on .arc{stroke:var(--gold)}.holdbtn.beat .arc{stroke:#e0b44a}.holdbtn.pb b{color:#e0b44a}
 .row-actions.center{justify-content:center}
 body[data-pl] .timer{z-index:2147483647}
+
+/* ---- v5: real demos + 3D ---- */
+.v3{position:absolute;inset:0;cursor:grab}.v3:active{cursor:grabbing}.v3 canvas{display:block;width:100%!important;height:100%!important}
+.v3load{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-weight:600}
+.stage.d3 .stage-ctrl{left:10px;right:10px;justify-content:flex-end;flex-wrap:wrap}
+.stage.d3 .stage-ctrl .seg{margin-right:auto}
+.txtbtn{width:auto!important;padding:0 10px!important;border-radius:999px!important;font-weight:700;font-size:13px}.txtbtn.on{background:var(--gold)!important;color:var(--on-acc)}
+.stage-ctrl>button.txtbtn{height:38px}
+.plswap{position:absolute;right:10px;top:10px;z-index:2;background:var(--glass)}
+.hint3{position:absolute;left:12px;bottom:10px;font-size:12px;color:var(--muted);background:var(--glass);border-radius:999px;padding:4px 10px;pointer-events:none}
+.pl-stage .v3{position:absolute;inset:0}
+.pcard{position:relative}.realtag{position:absolute;top:14px;left:14px;font-size:11px;font-weight:700;background:var(--gold);color:var(--on-acc);border-radius:999px;padding:2px 8px}
+img.hero-anim.gif,img.yhero-fig.gif{object-fit:cover;border-radius:18px;background:#fff;height:150px;align-self:center;box-shadow:0 10px 30px -14px rgba(0,0,0,.6)}
+.yhero-fig.gif{width:120px;height:140px}
+.login .chk{margin-top:10px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -1658,7 +1673,7 @@ const CUR_META={
  reardelt:['machine','isolation','b','0602'],lyingfrench:['e-z curl bar','isolation','b','0060'],hammer:['dumbbell','isolation','b','0313'],
  preacher:['machine','isolation','b','0070'],widesquat:['dumbbell','compound','b','3142'],lunge:['dumbbell','compound','b','0336'],
  stepup:['dumbbell','compound','b','0431'],abductor:['machine','isolation','b','0597'],legext:['machine','isolation','b','0585'],calfseated:['machine','isolation','b','0594'],
- w_march:['body only','','b',null],w_armcircle:['body only','','b',null],w_jacks:['body only','','b','3224'],w_legswing:['body only','','b',null],w_hinge:['body only','','b',null],w_sidelunge:['body only','','b',null]
+ w_march:['body only','','b','3636'],w_armcircle:['body only','','b',null],w_jacks:['body only','','b','3224'],w_legswing:['body only','','b',null],w_hinge:['body only','','b',null],w_sidelunge:['body only','','b',null]
 };
 const CARDIO_IDS=new Set(['cardio','crosstrainer','spinbike']);
 const REG={},DSGIF={};
@@ -2064,7 +2079,8 @@ y_sunsal:YP('Sun salutation','Surya Namaskar','flow',['shoulders','hamstrings','
  ['Mountain with hands at the heart.','Inhale arms up.','Exhale fold forward.','Inhale half lift.','Exhale step back to plank and lower down.','Inhale cobra.','Exhale downward dog for a few breaths.','Step forward, fold, rise up, return to mountain.'],
  ['One movement per breath.','Lower the knees in plank if needed.'],['Rushing the transitions.'],'Use knees-down plank and baby cobra.','Inhale on lifting moves, exhale on folding moves.')
 };
-Object.entries(YOGA).forEach(([id,y])=>{REG[id]=Object.assign({},y,{id,curated:true,anim:!!ANIM[id],equip:'body only',mech:'',level:'b',gif:y.gif?DSGIF[y.gif]:null,cat:'yoga',bw:true,setup:null});});
+const YGIF={"y_forwardfold": "3212", "y_lowlunge": "1564", "y_sidestretch": "0794", "y_child": "1346", "y_downdog": "3662", "y_plank": "2135", "y_cobra": "1366", "y_bridge": "3013", "y_butterfly": "1494", "y_boat": "0689", "y_happybaby": "2571", "y_legsup": "1576", "y_pigeon": "2567", "y_seatedtwist": "2329", "y_neck": "1403", "y_sunsal": "1471"};
+Object.entries(YOGA).forEach(([id,y])=>{if(YGIF[id])y.gif=YGIF[id];REG[id]=Object.assign({},y,{id,curated:true,anim:!!ANIM[id],equip:'body only',mech:'',level:'b',gif:y.gif?DSGIF[y.gif]:null,cat:'yoga',bw:true,setup:null});});
 
 /* breathing exercises: phases [kind,sec,label] kind: in|hold|out|hold2|pulse */
 const BREATHS={
@@ -2175,9 +2191,7 @@ const VAR=()=>S.variant||'m';
 
 /* ---------- local cache ---------- */
 const LKEY=id=>'kgt-user-'+id;
-function cacheUser(){try{localStorage.setItem(LKEY(U.id),JSON.stringify(U));localStorage.setItem('kgt-last-user',U.id);
-  const known=JSON.parse(localStorage.getItem('kgt-known')||'{}');known[U.id]={name:U.name,g:U.gender,t:Date.now()};localStorage.setItem('kgt-known',JSON.stringify(known));}catch(e){}}
-function knownUsers(){try{return JSON.parse(localStorage.getItem('kgt-known')||'{}');}catch(e){return {};}}
+function cacheUser(){try{localStorage.setItem(LKEY(U.id),JSON.stringify(U));if(U.stay!==false)localStorage.setItem('kgt-last-user',U.id);localStorage.removeItem('kgt-known');}catch(e){}}
 let dirty=false,saveT=null;
 function save(){if(!U)return;U.updated=Date.now();cacheUser();dirty=true;try{localStorage.setItem('kgt-dirty-'+U.id,'1');}catch(e){}clearTimeout(saveT);saveT=setTimeout(pushNow,6000);syncState(GH.key()?'pending':'local');}
 
@@ -2210,7 +2224,6 @@ const GH={
     if(!r.ok){const t=await r.text();const e=new Error(r.status+' '+t.slice(0,120));e.status=r.status;throw e;}
     return (await r.json()).content.sha;
   },
-  async list(){if(!GH.ok())return [];try{const r=await GH.api('users');if(!r.ok)return [];const j=await r.json();return j.filter(f=>/\.json$/.test(f.name)).map(f=>f.name.replace(/\.json$/,''));}catch(e){return [];}}
 };
 let SHA={};
 function syncState(st,msg){const el=document.getElementById('syncDot');if(el){el.dataset.st=st;el.title=msg||({local:'Saved on this phone only. Set up family sync in Settings.',pending:'Saving…',saved:'Saved to the family repository',offline:'Offline: will save when back online',error:'Could not save to GitHub'}[st]||'');}window._syncSt=st;}
@@ -2262,7 +2275,7 @@ async function createUser(id,name,g){
   if(GH.key())await pushNow();else syncState('local');
   return 'ok';
 }
-function logout(){U=null;S=null;try{localStorage.removeItem('kgt-last-user');}catch(e){}}
+function logout(forget){const id=U&&U.id;U=null;S=null;try{localStorage.removeItem('kgt-last-user');if(forget&&id)localStorage.removeItem(LKEY(id));}catch(e){}}
 /* data from the earlier single-user version on this phone */
 function legacyDone(){try{localStorage.setItem('kgt-legacy-done',String(Date.now()));}catch(e){}}
 function legacyData(){try{if(localStorage.getItem('kgt-legacy-done'))return null;}catch(e){}for(const k of LEGACY_KEYS){try{const raw=localStorage.getItem(k);if(raw)return {k,o:JSON.parse(raw)};}catch(e){}}return null;}
@@ -2341,7 +2354,17 @@ let lastTs=0;
     h.phase=(h.phase+dt/ANIM[h.id].dur*h.speed)%1;if(!h.cv.width)sizeCanvas(h);draw(h);});
   requestAnimationFrame(loop);})(0);
 const isVid=u=>/\.(mp4|webm|mov)(\?|$)/i.test(u);
-function mediaFor(ex){return S.media[ex.id]||ex.media||'';}
+/* Your own GIFs: put files in media/f/ (women) or media/m/ (men) of the website repository, named after the exercise key (see exercise page). */
+let MEDIA_DIR={m:{},f:{}};
+const mediaKey=id=>String(id).replace(/[^a-z0-9_-]/gi,'_');
+function pagesRepo(){if(!/\.github\.io$/i.test(location.hostname))return null;const o=location.hostname.split('.')[0],p=location.pathname.split('/').filter(Boolean);return {owner:o,repo:p.length&&!/\.html?$/i.test(p[0])?p[0]:o+'.github.io'};}
+async function loadMediaDir(){
+  try{const c=JSON.parse(localStorage.getItem('kgt-media')||'null');if(c&&Date.now()-c.t<6*36e5){MEDIA_DIR=c.d;return;}}catch(e){}
+  const pr=pagesRepo();if(!pr)return;const d={m:{},f:{}};
+  for(const v of ['m','f']){try{const r=await fetch(`https://api.github.com/repos/${pr.owner}/${pr.repo}/contents/media/${v}`);if(!r.ok)continue;(await r.json()).forEach(f=>{if(/\.(gif|webp|mp4|webm|png|jpe?g)$/i.test(f.name))d[v][f.name.replace(/\.[^.]+$/,'')]='media/'+v+'/'+f.name;});}catch(e){}}
+  MEDIA_DIR=d;try{localStorage.setItem('kgt-media',JSON.stringify({t:Date.now(),d}));}catch(e){}
+}
+function mediaFor(ex){if(S.media[ex.id])return S.media[ex.id];const k=mediaKey(ex.id),v=VAR();return MEDIA_DIR[v][k]||ex.media||'';}
 function thumbHTML(ex,cls){
   const m=mediaFor(ex);
   if(m)return isVid(m)?`<video class="${cls||''}" src="${esc(m)}" muted loop autoplay playsinline></video>`:`<img class="${cls||''}" src="${esc(m)}" alt="" loading="lazy">`;
@@ -2393,6 +2416,137 @@ function heatmap(weeks){
 }
 
 /* =========================================================
+   3D FIGURE VIEWER (three.js). Drag to rotate, pinch/scroll to zoom.
+   Re-uses the 2D rig: side-view poses get real left/right depth,
+   front-view poses recover depth from limb foreshortening.
+   ========================================================= */
+let THREE_P=null;
+function loadThree(){if(window.THREE)return Promise.resolve(window.THREE);if(THREE_P)return THREE_P;
+  THREE_P=new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';s.onload=()=>res(window.THREE);s.onerror=()=>{THREE_P=null;rej(new Error('3D library failed to load'));};document.head.appendChild(s);});return THREE_P;}
+const LEN={ua:29,fa:26,th:42,sh:40};
+function joints3D(id,phase,female){
+  const an=ANIM[id],fr=frameAt(an,phase),P=Object.assign({},fr.P);P._v=an.v;const keepF=FEM;FEM=female;
+  const J=an.v==='side'?solveSide(P):solveFront(P);FEM=keepF;
+  const b=animBox(id),cx=b[0]+b[2]/2,Y=p=>FLOOR-p[1],o={};
+  if(an.v==='side'){
+    const ws=female?15:17,wh=female?11:9.5,P3=(p,z)=>[p[0]-cx,Y(p),z];
+    Object.assign(o,{pel:P3(J.H,0),chest:P3(J.S,0),neck:P3(J.Nk,0),head:P3(J.Hd,0),
+      sR:P3(J.S,ws),eR:P3(J.eN,ws),wR:P3(J.wN,ws),sL:P3(J.S,-ws),eL:P3(J.eF,-ws),wL:P3(J.wF,-ws),
+      hR:P3(J.H,wh),kR:P3(J.kN,wh),aR:P3(J.aN,wh),tR:P3(J.tN,wh),hL:P3(J.H,-wh),kL:P3(J.kF,-wh),aL:P3(J.aF,-wh),tL:P3(J.tF,-wh)});
+    o.face=[Math.cos(J.na),-Math.sin(J.na),0];o.lat=[0,0,1];
+  }else{
+    const sg=an.v==='back'?-1:1,X=p=>p[0]-cx;
+    const D=(par,ch,L)=>{const d=Math.hypot(ch[0]-par[0],ch[1]-par[1]);return d<L-1.5?sg*Math.sqrt(L*L-d*d):0;};
+    const P3=(p,z)=>[X(p),Y(p),z];
+    o.pel=P3(J.C,0);o.chest=P3(J.top,0);o.neck=P3(J.Nk,0);o.head=P3(J.Hd,0);
+    const arm=(S,E,W,k)=>{const ze=D(S,E,LEN.ua),zw=ze+D(E,W,LEN.fa);o['s'+k]=P3(S,0);o['e'+k]=P3(E,ze);o['w'+k]=P3(W,zw);};
+    const leg=(H,K,A,k)=>{const zk=D(H,K,LEN.th),za=zk+D(K,A,LEN.sh);o['h'+k]=P3(H,0);o['k'+k]=P3(K,zk);o['a'+k]=P3(A,za);o['t'+k]=[X(A),Y(A)-4,za+sg*12];};
+    arm(J.SA,J.eA,J.wA,'R');arm(J.SB,J.eB,J.wB,'L');leg(J.HA,J.kA,J.aA,'R');leg(J.HB,J.kB,J.aB,'L');
+    o.face=[Math.sin(J.na)*0.3,0,sg];o.lat=[1,0,0];
+  }
+  return {o,e:fr.e,hl:fr.hl,view:an.v,box:b};
+}
+/* parse the 2D prop drawing code once to rebuild benches, seats, steps, posts and mats in 3D */
+const PROP3={};
+function props3D(id){
+  if(PROP3[id])return PROP3[id];const an=ANIM[id],src=(an.bk?an.bk.toString():'')+(an.fr?an.fr.toString():''),out=[];let m;
+  const b=animBox(id),cx=b[0]+b[2]/2,front=an.v!=='side',Y=y=>FLOOR-y;
+  const box=(x,y,w,h,z0,z1,kind)=>out.push({t:'box',x0:x-cx,x1:x+w-cx,y0:Y(y+h),y1:Y(y),z0,z1,kind});
+  let r=/PR\.bench\(ctx,(\d+),(\d+),(\d+)\)/g;while(m=r.exec(src)){const [x1,x2,y]=m.slice(1).map(Number);box(x1,y,x2-x1,7,-16,16,'pad');[x1+8,x2-8].forEach(x=>out.push({t:'post',x:x-cx,y0:0,y1:Y(y),z:0,r:2}));}
+  r=/seatSide\((\d+),(\d+),(\d+)\)/g;while(m=r.exec(src)){const [x,y,w]=m.slice(1).map(Number);box(x,y,w,8,-17,17,'pad');out.push({t:'post',x:x+w/2-cx,y0:0,y1:Y(y),z:0,r:2.5});}
+  if(/seatFront\(ctx\)/.test(src)){box(96,128,48,10,-22,10,'pad');out.push({t:'post',x:120-cx,y0:0,y1:Y(128),z:-6,r:2.5});}
+  r=/PR\.rect\(ctx,(\d+),(\d+),(\d+),(\d+),COL\.pad/g;while(m=r.exec(src)){const [x,y,w,h]=m.slice(1).map(Number);
+    if(front)out.push({t:'box',x0:x-cx,x1:x+w-cx,y0:Y(y+h),y1:Y(y),z0:-30,z1:-20,kind:'pad'});else box(x,y,w,h,h>60?-40:-18,h>60?40:18,'pad');}
+  r=/PR\.post\(ctx,(\d+),(\d+)\)/g;while(m=r.exec(src)){const [x,top]=m.slice(1).map(Number);out.push({t:'post',x:x-cx,y0:0,y1:Y(top),z:front?-30:-26,r:2.5});}
+  if(/matB|PR\.mat/.test(src))out.push({t:'mat'});
+  if(/backPad/.test(src))out.push({t:'backpad'});
+  return PROP3[id]=out;
+}
+const V3S=new Set();
+function mount3D(el,id,opt){
+  opt=opt||{};let alive=true;const ctl={playing:!reduceMotion,speed:1,auto:!!opt.auto,destroy(){alive=false;}};
+  el.innerHTML='<div class="v3load">Loading 3D…</div>';
+  loadThree().then(T=>{if(!alive||!el.isConnected)return;el.innerHTML='';build(T);}).catch(()=>{el.innerHTML=`<canvas data-anim="${id}" data-fit="22"></canvas>`;mountAnims(el);});
+  function build(T){
+    const ex=exById(id),fem=VAR()==='f',light=CUR==='yoga',an=ANIM[id];
+    const W=()=>el.clientWidth||300,H=()=>el.clientHeight||260;
+    const ren=new T.WebGLRenderer({antialias:true,alpha:true});ren.setPixelRatio(Math.min(2,window.devicePixelRatio||1));ren.setSize(W(),H());ren.shadowMap.enabled=true;ren.shadowMap.type=T.PCFSoftShadowMap;
+    el.appendChild(ren.domElement);ren.domElement.style.touchAction='none';
+    const sc=new T.Scene(),cam=new T.PerspectiveCamera(32,W()/H(),1,2000);
+    sc.add(new T.HemisphereLight(light?0xfffdf5:0xdfe6ff,light?0xcfc6b4:0x30333c,light?0.95:0.85));
+    const dl=new T.DirectionalLight(0xffffff,light?0.75:0.95);dl.position.set(120,260,180);dl.castShadow=true;dl.shadow.mapSize.set(1024,1024);
+    Object.assign(dl.shadow.camera,{left:-160,right:160,top:160,bottom:-160,near:10,far:800});sc.add(dl);
+    const rim=new T.DirectionalLight(new T.Color(ACC()),0.35);rim.position.set(-200,120,-160);sc.add(rim);
+    const floor=new T.Mesh(new T.CircleGeometry(170,64),new T.MeshStandardMaterial({color:light?0xebe4d6:0x1d2028,roughness:1}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;sc.add(floor);
+    const ringM=new T.Mesh(new T.RingGeometry(168,171,64),new T.MeshBasicMaterial({color:new T.Color(ACC()),transparent:true,opacity:.35}));ringM.rotation.x=-Math.PI/2;ringM.position.y=.2;sc.add(ringM);
+    const base=new T.Color(light?0xc9c0b2:0xa7a2b2),hot=new T.Color(light?0xde7054:0xff5436),hair=new T.Color(light?0x5b4636:0x2c2420);
+    const mat=()=>new T.MeshStandardMaterial({color:base.clone(),roughness:.55,metalness:.05});
+    const unitC=new T.CylinderGeometry(1,1,1,18,1,true),unitS=new T.SphereGeometry(1,20,14);
+    const parts=[];
+    const seg=(a,b,r,mfn,r2)=>{const m=mat(),c=new T.Mesh(unitC,m),s1=new T.Mesh(unitS,m),s2=new T.Mesh(unitS,m);[c,s1,s2].forEach(x=>{x.castShadow=true;sc.add(x);});parts.push({a,b,r,r2:r2||r,c,s1,s2,m,mfn});};
+    const lv=(m,pri,sec,e)=>pri.includes(m)?0.3+0.7*e:sec.includes(m)?0.1+0.32*e:0;
+    const mx=(...ms)=>(L)=>Math.max(...ms.map(([m,k])=>L(m)*(k||1)));
+    seg('pel','mid',fem?10.5:11,mx(['abs'],['obliques'],['lower_back']));seg('mid','chest',fem?11:12.5,mx(['chest'],['lats'],['mid_back'],['traps',.7]));
+    seg('hL','hR',fem?9:8,mx(['glutes'],['abductors']));seg('sL','sR',6,mx(['shoulders'],['rear_delts'],['traps',.6]));seg('chest','neck',4.6,mx(['traps']));
+    ['R','L'].forEach(k=>{seg('s'+k,'e'+k,5,mx(['biceps'],['triceps'],['shoulders',.6],['rear_delts',.6]),4.4);seg('e'+k,'w'+k,4.2,mx(['forearms']),3.4);
+      seg('h'+k,'k'+k,fem?7.4:7,mx(['quads'],['hamstrings'],['adductors'],['abductors',.7],['glutes',.4]),5.4);seg('k'+k,'a'+k,5.2,mx(['calves']),3.6);seg('a'+k,'t'+k,3.2,()=>0,2.6);});
+    const headM=mat(),head=new T.Mesh(unitS,headM);head.scale.setScalar(10.5);head.castShadow=true;sc.add(head);
+    const visor=new T.Mesh(new T.SphereGeometry(1,16,10),new T.MeshStandardMaterial({color:light?0x8a8174:0x3a3644,roughness:.3}));visor.scale.set(4.5,2.2,4.5);sc.add(visor);
+    let hairM=null,tail=null;if(fem){hairM=new T.Mesh(unitS,new T.MeshStandardMaterial({color:hair,roughness:.7}));hairM.scale.setScalar(11);sc.add(hairM);tail=new T.Mesh(unitS,hairM.material);tail.scale.set(4,6,4);sc.add(tail);}
+    /* equipment held in the hands */
+    const steel=new T.MeshStandardMaterial({color:0x8d8a94,metalness:.6,roughness:.35}),plateM=new T.MeshStandardMaterial({color:0x26242a,roughness:.6}),goldM=new T.MeshStandardMaterial({color:new T.Color(ACC()),roughness:.4});
+    const hold=[];const eq=ex.equip||'';const bar=/barbell|e-z/.test(eq)&&!/stretch/.test(id),dbs=eq==='dumbbell';
+    if(bar){const len=eq==='e-z curl bar'?62:120,pr=eq==='e-z curl bar'?9:16;const g=new T.Group();const rod=new T.Mesh(new T.CylinderGeometry(1.4,1.4,len,10),steel);g.add(rod);[-1,1].forEach(s=>{const p=new T.Mesh(new T.CylinderGeometry(pr,pr,4,24),plateM);p.position.y=s*(len/2-8);g.add(p);const rr=new T.Mesh(new T.TorusGeometry(pr-1.5,.7,6,24),goldM);rr.rotation.x=Math.PI/2;rr.position.y=s*(len/2-10.2);g.add(rr);});g.traverse(x=>x.castShadow=true);sc.add(g);hold.push({g,kind:'bar'});}
+    if(dbs)['R','L'].forEach(k=>{const g=new T.Group();g.add(new T.Mesh(new T.CylinderGeometry(1.3,1.3,14,8),steel));[-1,1].forEach(s=>{const p=new T.Mesh(new T.CylinderGeometry(5.5,5.5,4,18),plateM);p.position.y=s*8;g.add(p);});g.traverse(x=>x.castShadow=true);sc.add(g);hold.push({g,kind:'db',k});});
+    /* static props */
+    const padM=new T.MeshStandardMaterial({color:light?0xa9c1a3:0x2e2b33,roughness:.8}),frameM=new T.MeshStandardMaterial({color:light?0xbdb6aa:0x4a4752,roughness:.5,metalness:.3});
+    let backpad=null;
+    props3D(id).forEach(p=>{
+      if(p.t==='box'){const m=new T.Mesh(new T.BoxGeometry(Math.max(2,p.x1-p.x0),Math.max(2,p.y1-p.y0),Math.max(2,p.z1-p.z0)),padM);m.position.set((p.x0+p.x1)/2,(p.y0+p.y1)/2,(p.z0+p.z1)/2);m.castShadow=m.receiveShadow=true;sc.add(m);}
+      else if(p.t==='post'){const h=Math.max(2,p.y1-p.y0),m=new T.Mesh(new T.CylinderGeometry(p.r,p.r,h,10),frameM);m.position.set(p.x,p.y0+h/2,p.z);m.castShadow=true;sc.add(m);}
+      else if(p.t==='mat'){const m=new T.Mesh(new T.BoxGeometry(230,1.5,70),new T.MeshStandardMaterial({color:light?0x9fbf98:0x3b3446,roughness:.9}));m.position.set(0,.8,0);m.receiveShadow=true;sc.add(m);}
+      else if(p.t==='backpad'){backpad=new T.Mesh(new T.BoxGeometry(9,1,34),padM);backpad.castShadow=true;sc.add(backpad);}
+    });
+    /* camera orbit */
+    const b=animBox(id),tgt=new T.Vector3(0,FLOOR-(b[1]+b[3]/2),0),fit=Math.max(b[2],b[3])*1.15;
+    let th=an.v==='side'?0.55:0.45,ph=0.2,R=fit/(2*Math.tan(16*Math.PI/180))*1.05;
+    const place=()=>{cam.position.set(tgt.x+R*Math.sin(th)*Math.cos(ph),tgt.y+R*Math.sin(ph),tgt.z+R*Math.cos(th)*Math.cos(ph));cam.lookAt(tgt);};
+    ctl.view=v=>{const side=an.v==='side';th={front:side?Math.PI/2:0,side:side?0:Math.PI/2,back:side?-Math.PI/2:Math.PI,three:side?0.55:0.45}[v]??th;ph=v==='top'?1.25:0.12;ctl.auto=false;};
+    const el2=ren.domElement;let drag=null,pinch=null;
+    el2.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,th,ph};el2.setPointerCapture(e.pointerId);ctl.auto=false;});
+    el2.addEventListener('pointermove',e=>{if(!drag||pinch)return;th=drag.th-(e.clientX-drag.x)*0.012;ph=Math.max(-0.15,Math.min(1.35,drag.ph+(e.clientY-drag.y)*0.01));});
+    el2.addEventListener('pointerup',()=>drag=null);el2.addEventListener('pointercancel',()=>drag=null);
+    el2.addEventListener('wheel',e=>{e.preventDefault();R=Math.max(fit*0.9,Math.min(fit*5,R*(1+Math.sign(e.deltaY)*0.08)));},{passive:false});
+    el2.addEventListener('touchstart',e=>{if(e.touches.length===2){pinch={d:Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY),R};drag=null;}},{passive:true});
+    el2.addEventListener('touchmove',e=>{if(pinch&&e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);R=Math.max(fit*0.9,Math.min(fit*5,pinch.R*pinch.d/d));}},{passive:true});
+    el2.addEventListener('touchend',()=>{pinch=null;});
+    /* frame update */
+    const V=a=>new T.Vector3(a[0],a[1],a[2]),up=new T.Vector3(0,1,0);
+    let phase=an.cyc?0.15:0.5,last=performance.now(),vis=true;
+    const io2=new IntersectionObserver(es=>es.forEach(x=>vis=x.isIntersecting));io2.observe(el);
+    const ro2=new ResizeObserver(()=>{ren.setSize(W(),H());cam.aspect=W()/H();cam.updateProjectionMatrix();});ro2.observe(el);
+    function pose(){
+      const r=joints3D(id,phase,fem),o=r.o;o.mid=o.pel.map((v,i)=>(v+o.chest[i])/2);
+      const pri=r.hl||ex.p||[],sec=r.hl?[]:(ex.s||[]),L=m=>lv(m,pri,sec,r.e);
+      parts.forEach(p=>{const A=V(o[p.a]),B=V(o[p.b]),d=B.clone().sub(A),len=d.length()||0.01;
+        p.c.position.copy(A).addScaledVector(d,.5);p.c.quaternion.setFromUnitVectors(up,d.clone().normalize());p.c.scale.set((p.r+p.r2)/2,len,(p.r+p.r2)/2);
+        p.s1.position.copy(A);p.s1.scale.setScalar(p.r);p.s2.position.copy(B);p.s2.scale.setScalar(p.r2);
+        const k=Math.max(0,Math.min(1,p.mfn(L)));p.m.color.copy(base).lerp(hot,k);p.m.emissive.copy(hot).multiplyScalar(k*0.28);});
+      const hd=V(o.head),f=V(o.face).normalize();head.position.copy(hd);visor.position.copy(hd).addScaledVector(f,8.6).add(new T.Vector3(0,1.5,0));visor.lookAt(hd.clone().addScaledVector(f,30));
+      if(hairM){hairM.position.copy(hd).addScaledVector(f,-2.2).add(new T.Vector3(0,1.6,0));tail.position.copy(hd).addScaledVector(f,-11).add(new T.Vector3(0,-3,0));}
+      hold.forEach(h=>{if(h.kind==='bar'){const a=V(o.wR),c=V(o.wL),m=a.clone().add(c).multiplyScalar(.5),lat=V(o.lat);h.g.position.copy(m);h.g.quaternion.setFromUnitVectors(up,lat);}
+        else{const w=V(o['w'+h.k]),e=V(o['e'+h.k]);h.g.position.copy(w);const fd=w.clone().sub(e).normalize();const lat=V(o.lat);const ax=/hammer/.test(id)?fd.clone().cross(lat).normalize():lat;h.g.quaternion.setFromUnitVectors(up,ax.lengthSq()>0.1?ax:lat);}});
+      if(backpad){const P=V(o.pel),C=V(o.chest),d=C.clone().sub(P),n=new T.Vector3(-d.y,d.x,0).normalize().multiplyScalar(-14);backpad.position.copy(P).addScaledVector(d,.55).add(n);backpad.quaternion.setFromUnitVectors(up,d.clone().normalize());backpad.scale.set(1,d.length()*1.15,1);}
+    }
+    function loop(t){if(!alive||!el.isConnected){ren.dispose();io2.disconnect();ro2.disconnect();V3S.delete(ctl);return;}
+      requestAnimationFrame(loop);const dt=Math.min(64,t-last);last=t;if(!vis)return;
+      if(ctl.playing)phase=(phase+dt/an.dur*ctl.speed)%1;if(ctl.auto)th+=dt*0.00025;pose();place();ren.render(sc,cam);}
+    V3S.add(ctl);pose();place();requestAnimationFrame(loop);
+  }
+  return ctl;
+}
+
+/* =========================================================
    SHELL: theme, sections, nav, dialogs, login, settings
    ========================================================= */
 const THEMES={'gym-m':['#3d9bff','61,155,255'],'gym-f':['#ff4f9a','255,79,154'],'home-m':['#22c3c3','34,195,195'],'home-f':['#ff7a9c','255,122,156'],'yoga-m':['#4f8a8b','79,138,139'],'yoga-f':['#c4788b','196,120,139']};
@@ -2421,7 +2575,7 @@ function initials(n){return String(n||'?').split(/\s+/).map(w=>w[0]).slice(0,2).
 function brand(title){
   return `<header class="brand"><div class="logo" aria-hidden="true">K</div><div class="bt"><b>${title||"Kundan's Gym Tracker"}</b><small>${esc(U.name)}, ${new Date().toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'})}</small></div>
   <span id="syncDot" class="syncdot" data-st="${window._syncSt||'local'}" title=""></span>
-  <button class="avatar" id="userBtn" aria-label="Switch user">${initials(U.name)}</button><button class="iconbtn" id="gearBtn" aria-label="Settings">${ICON.gear}</button></header>
+  <button class="avatar" id="userBtn" aria-label="Account and sign out">${initials(U.name)}</button><button class="iconbtn" id="gearBtn" aria-label="Settings">${ICON.gear}</button></header>
   <div class="secbar"><div class="secs" role="tablist" aria-label="Sections">${SECS.map(s=>`<button role="tab" data-sec="${s}" aria-selected="${s===CUR}">${{gym:'Gym',home:'Home',yoga:'Yoga'}[s]}</button>`).join('')}</div>
   <div class="gseg" role="group" aria-label="Designed for"><button data-var="m" aria-pressed="${VAR()==='m'}">Men</button><button data-var="f" aria-pressed="${VAR()==='f'}">Women</button></div></div>`;
 }
@@ -2440,39 +2594,34 @@ function resumePill(){const p=$('#resume');const a=U&&A();if(!a||nav==='session'
 let loginMode='pick';
 function renderLogin(){
   document.body.dataset.th='gym-m';document.body.classList.remove('in-session');renderNav();$('#resume').hidden=true;
-  const known=Object.entries(knownUsers()).sort((a,b)=>b[1].t-a[1].t);
+  try{localStorage.removeItem('kgt-known');}catch(e){}
   app.innerHTML=`<section class="login">
-    <div class="logo big" aria-hidden="true">K</div><h1>Kundan's Gym Tracker</h1><p class="muted">Gym, home workouts and yoga for the whole family.</p>
-    ${known.length?`<h2 class="sec">Who's training?</h2><div class="ugrid">${known.map(([id,u])=>`<button class="ucard" data-uid="${esc(id)}"><span class="avatar lg ${u.g==='f'?'f':''}">${initials(u.name)}</span><b>${esc(u.name)}</b><small>@${esc(id)}</small></button>`).join('')}</div>`:''}
-    <div id="famList"></div>
-    <div class="panel"><b>Open your account</b><p class="muted small">Type your user ID on any phone to get your data.</p>
-      <div class="frow"><input id="lgId" autocapitalize="none" autocomplete="username" placeholder="user ID, e.g. kundan" aria-label="User ID"><button class="cta" id="lgGo">Open</button></div><p class="lgmsg" id="lgMsg"></p></div>
+    <div class="logo big" aria-hidden="true">K</div><h1>Kundan's Gym Tracker</h1><p class="muted">Gym, home workouts and yoga. Your data is private to your user ID.</p>
+    <div class="panel"><b>Sign in</b><p class="muted small">Type your user ID to open your account on any phone.</p>
+      <div class="frow"><input id="lgId" autocapitalize="none" autocomplete="off" spellcheck="false" placeholder="Your user ID" aria-label="User ID"><button class="cta" id="lgGo">Open</button></div>
+      <label class="chk"><input type="checkbox" id="lgStay" checked> Keep me signed in on this phone</label><p class="lgmsg" id="lgMsg"></p></div>
     <details class="panel" id="newPanel" ${loginMode==='new'?'open':''}><summary><b>New here? Create your profile</b></summary>
-      <label class="fld">Choose a user ID (letters and numbers)<input id="nId" autocapitalize="none" placeholder="e.g. priya"></label>
-      <label class="fld">Your full name (shown in the app)<input id="nName" placeholder="e.g. Priya Wadje"></label>
+      <label class="fld">Choose a user ID (letters and numbers)<input id="nId" autocapitalize="none" autocomplete="off" spellcheck="false" placeholder="Pick something only you will use"></label>
+      <label class="fld">Your name (shown only to you, inside your account)<input id="nName" placeholder="Your name"></label>
       <fieldset class="q"><legend>Design my plans for</legend><div class="opts"><button class="opt" data-ng="m" aria-pressed="true">Men</button><button class="opt" data-ng="f" aria-pressed="false">Women</button></div></fieldset>
       <button class="cta wide" id="nGo">Create my profile</button><p class="lgmsg" id="nMsg"></p></details>
-    <p class="muted small center">${GH.key()?'Family saving is on for this phone.':'Family saving is not set up on this phone yet, so data stays on this phone. <button class="link sm" id="lgSync">Set it up</button>'}</p>
+    <p class="muted small center">${GH.key()?'Saving is set up on this phone.':'Saving is not set up on this phone yet. <button class="link sm" id="lgSync">Set it up</button>'}</p>
   </section>`;
   let g='m';
   app.querySelectorAll('[data-ng]').forEach(b=>b.onclick=()=>{g=b.dataset.ng;app.querySelectorAll('[data-ng]').forEach(x=>x.setAttribute('aria-pressed',x===b));});
-  app.querySelectorAll('[data-uid]').forEach(b=>b.onclick=()=>login(b.dataset.uid));
   $('#lgGo').onclick=()=>login($('#lgId').value);$('#lgId').onkeydown=e=>{if(e.key==='Enter')login($('#lgId').value);};
   const ls=$('#lgSync');if(ls)ls.onclick=openSync;
   $('#nGo').onclick=async()=>{const id=$('#nId').value.trim().toLowerCase(),name=$('#nName').value.trim(),m=$('#nMsg');
     if(!/^[a-z0-9_-]{2,24}$/.test(id))return m.textContent='User ID: 2–24 letters or numbers, no spaces.';if(!name)return m.textContent='Please type your name.';
-    m.textContent='Creating…';const r=await createUser(id,name,g);if(r==='exists'){m.textContent='That user ID is taken. Use "Open your account" instead, or pick another ID.';return;}
+    m.textContent='Creating…';const r=await createUser(id,name,g);if(r==='exists'){m.textContent='That user ID is not available. Please choose another.';return;}
     afterLogin(true);};
-  GH.list().then(ids=>{const el=$('#famList');if(!el||!ids.length)return;const kn=knownUsers();const others=ids.filter(i=>!kn[i]);if(!others.length)return;
-    el.innerHTML=`<h2 class="sec">Family members</h2><div class="ugrid">${others.map(id=>`<button class="ucard" data-uid="${esc(id)}"><span class="avatar lg">${esc(id[0].toUpperCase())}</span><b>@${esc(id)}</b></button>`).join('')}</div>`;
-    el.querySelectorAll('[data-uid]').forEach(b=>b.onclick=()=>login(b.dataset.uid));});
 }
 async function login(id){
   id=String(id||'').trim().toLowerCase();const m=$('#lgMsg');if(!id){if(m)m.textContent='Type your user ID.';return;}
   if(m)m.textContent='Opening…';const r=await openUser(id);
-  if(r==='ok')return afterLogin();
-  if(m)m.innerHTML=r==='missing'?`No account called "${esc(id)}" yet. Create it below.`:r==='nocfg'?'This copy of the app is not running on GitHub Pages, so it can only open accounts already on this phone.':'Could not reach the family repository. Check the internet and try again.';
-  if(r==='missing'){const ni=$('#nId');if(ni)ni.value=id;$('#newPanel').open=true;}
+  if(r==='ok'){const st=$('#lgStay');U.stay=!st||st.checked;if(!U.stay)try{localStorage.removeItem('kgt-last-user');}catch(e){}return afterLogin();}
+  if(m)m.innerHTML=r==='missing'?`No account found for that ID. Check the spelling, or create a new profile below.${GH.key()?'':' If your family saves to a private repository, open the setup link on this phone first.'}`:r==='nocfg'?'This copy of the app is not running on GitHub Pages, so it can only open accounts already on this phone.':'Could not reach the family repository. Check the internet and try again.';
+
 }
 async function afterLogin(isNew){
   nav='home';sub=null;show();
@@ -2482,13 +2631,13 @@ async function afterLogin(isNew){
     else{U.legacyImported=Date.now();legacyDone();save();}}
   if(isNew)toast('Welcome, '+U.name.split(' ')[0]+'!');
 }
-async function switchUser(){if(A()&&!(await ask('A workout is in progress. It stays saved in your account. Switch user anyway?','Switch')))return;if(dirty)await pushNow();logout();nav='home';show();}
+async function switchUser(){if(A()&&!(await ask('A workout is in progress. It stays saved in your account. Sign out anyway?','Sign out')))return;if(dirty)await pushNow();const forget=!!GH.key()&&!dirty;logout(forget);nav='home';show();toast('Signed out');}
 
 /* ---------- settings + sync ---------- */
 function openSettings(){
   const d=$('#menu');$('#menuTitle').textContent='Settings';const c=GH.cfg();
   $('#menuBody').innerHTML=`<label class="fld">Your name<input id="stName" value="${esc(U.name)}"></label>
-  <div class="setting"><div>User ID<small>@${esc(U.id)}. Use it to open your account on any phone.</small></div><button class="chipbtn" id="stSwitch">Switch user</button></div>
+  <div class="setting"><div>User ID<small>@${esc(U.id)}. Keep it to yourself: anyone who types it can open this account.</small></div><button class="chipbtn" id="stSwitch">Sign out</button></div>
   <h3 class="subh">Family saving</h3>
   <div class="setting"><div>Status<small id="stSyncTxt">${GH.key()?(GH.ok()?`Saving to ${esc(c.owner)}/${esc(c.repo)}/users/${esc(U.id)}.json`:'Key saved, but the repository was not detected.'):'Not set up: data is saved on this phone only.'}</small></div><button class="chipbtn" id="stSync">${GH.key()?'Manage':'Set up'}</button></div>
   <div class="row-actions"><button class="chipbtn" id="stExp">${ICON.dl} Download my user file</button><label class="chipbtn">${ICON.ul} Restore from a file<input type="file" id="stImp" accept="application/json,.json" hidden></label></div>
@@ -2513,7 +2662,7 @@ function openSettings(){
       if(o.sections&&o.id){if(await ask(`Load "${o.name}" (@${o.id}) from this file into this phone? It is merged with what is already here.`,'Load')){U=normUser(mergeUsers(o,U.id===o.id?U:o));useSection(U.cur||'gym');save();d.close();toast('File loaded');show();}}
       else if(o.plans&&o.history){if(await ask(`Add ${o.history.length} workouts from this old backup to ${U.name}'s Gym section?`,'Add')){const g=U.sections.gym,ids=new Set(g.history.map(h=>String(h.id)));o.history.forEach(h=>{h.id=String(h.id);if(!ids.has(h.id))g.history.push(h);});g.history.sort((a,b)=>a.start-b.start);save();d.close();toast('Backup added');show();}}
       else throw 0;}catch(x){toast('That file is not a Kundan Gym Tracker file');}};r.readAsText(f);};
-  $('#stWipe').onclick=async()=>{if(await ask(`Remove ${U.name}'s data from this phone?${GH.key()?' Your file in the family repository stays safe.':' Family saving is off, so download your user file first or it will be lost.'}`,'Remove',true)){try{localStorage.removeItem(LKEY(U.id));const k=knownUsers();delete k[U.id];localStorage.setItem('kgt-known',JSON.stringify(k));}catch(x){}d.close();logout();show();}};
+  $('#stWipe').onclick=async()=>{if(await ask(`Remove ${U.name}'s data from this phone?${GH.key()?' Your file in the family repository stays safe.':' Family saving is off, so download your user file first or it will be lost.'}`,'Remove',true)){try{localStorage.removeItem(LKEY(U.id));}catch(x){}d.close();logout();show();}};
   d.showModal();
 }
 function downloadUser(){const blob=new Blob([JSON.stringify(Object.assign({},U,{active:U.active}),null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=U.id+'.json';document.body.appendChild(a);a.click();a.remove();toast('Saved '+U.id+'.json. Upload it to the users folder of your repository.');}
@@ -2532,7 +2681,12 @@ function openSync(){
    <li>Permissions → Repository permissions → <b>Contents: Read and write</b>. Nothing else.</li>
    <li>Set an expiry you're comfortable with, generate, and paste it above.</li>
    <li>Tap <b>Copy setup link for family</b> and send it to family members. Opening it once sets up their phone.</li></ol>
-   <p class="small muted">Anyone with this key or link can change files in that one repository, so only share it with family. Never paste it into the code or commit it to the repository.</p></details>`;
+   <p class="small muted">Anyone with this key or link can change files in that one repository, so only share it with family. Never paste it into the code or commit it to the repository.</p></details>
+  <details class="panel"><summary><b>Keep accounts private (recommended)</b></summary><ol class="small">
+   <li>On github.com create a new <b>Private</b> repository, e.g. <i>fitness-data</i>, and upload your <b>users</b> folder into it.</li>
+   <li>Make the key above for that private repository (Contents: Read and write).</li>
+   <li>Here, set Repository name to that private repository and tap Save and test, then copy the new family setup link.</li></ol>
+   <p class="small muted">The website repository must stay public for GitHub Pages, so anyone could browse a users folder kept there. In a private repository, nobody outside the family can see who uses the app.</p></details>`;
   $('#sySave').onclick=async()=>{const o=$('#syOwner').value.trim(),r=$('#syRepo').value.trim(),b=$('#syBranch').value.trim(),key=$('#syKey').value.trim();
     try{localStorage.setItem('kgt-repo',JSON.stringify({owner:o,repo:r,branch:b}));if(key)localStorage.setItem('kgt-sync-key',key);else localStorage.removeItem('kgt-sync-key');}catch(x){}
     const m=$('#syMsg');m.textContent='Testing…';
@@ -2551,7 +2705,7 @@ function readSetupLink(){const h=location.hash.slice(1);if(!h.includes('sync='))
   try{const k=p.get('sync');if(k)localStorage.setItem('kgt-sync-key',k);const r=p.get('repo');if(r){const [or,br]=r.split('@');const [o,rp]=or.split('/');localStorage.setItem('kgt-repo',JSON.stringify({owner:o,repo:rp,branch:br||''}));}}catch(e){}
   history.replaceState(null,'',location.pathname+location.search);setTimeout(()=>toast('Family saving is set up on this phone'),600);}
 async function boot(){
-  readSetupLink();
+  readSetupLink();loadMediaDir();try{localStorage.removeItem('kgt-known');}catch(e){}
   const last=(()=>{try{return localStorage.getItem('kgt-last-user');}catch(e){return null;}})();
   if(last){const r=await openUser(last);if(r==='ok'){
     if(A()&&Date.now()-A().start>8*3600e3){const a=A();if(a.screen==='workout'&&a.items.some(x=>x.sets.some(s=>s.done))){useSection(a.sec||'gym');await finishSession();nav='home';}else{U.active=null;save();}}
@@ -2680,7 +2834,8 @@ function renderHome(){
   const days=['M','T','W','T','F','S','S'],wk=weekKey(Date.now());
   app.innerHTML=brand()+`
   <section class="hero">
-    <canvas class="hero-anim" data-anim="${nd.items.find(i=>ANIM[i.ex]&&i.ex!=='cardio')?.ex||'w_jacks'}" data-fit="10" aria-hidden="true"></canvas>
+    ${(()=>{const it=nd.items.find(i=>exById(i.ex).gif&&!/cardio|stretch|w_/.test(i.ex))||nd.items.find(i=>ANIM[i.ex]&&i.ex!=='cardio');const ex=it?exById(it.ex):null;const m=ex?mediaFor(ex)||(ex.gif?GIF_BASE+ex.gif:''):'';
+      return m?`<img class="hero-anim gif" src="${esc(m)}" alt="" aria-hidden="true">`:`<canvas class="hero-anim" data-anim="${it?it.ex:'w_jacks'}" data-fit="10" aria-hidden="true"></canvas>`;})()}
     <div class="hero-txt">
       <p class="eyebrow">${greet()}, ${esc((U.name||'Kundan').split(' ')[0])}</p>
       <h1>${esc(nd.name)}</h1>
@@ -3044,10 +3199,11 @@ let stageMode=null;
 function renderSheet(){
   const {list,i}=sheetCtx,id=list[i],ex=exById(id),len=list.length;
   $('#sheetPos').textContent=`${sheetCtx.label?sheetCtx.label+': ':''}${i+1} of ${len}`;$('#prevEx').disabled=i===0;$('#nextEx').disabled=i===len-1;
-  const own=mediaFor(ex),modes=[];if(own)modes.push(['own','My demo']);if(ex.gif)modes.push(['gif','3D demo']);if(ex.anim)modes.push(['anim','Muscle animation']);
+  const own=mediaFor(ex),modes=[];if(own)modes.push(['own',VAR()==='f'&&MEDIA_DIR.f[mediaKey(id)]?'Female demo':'My demo']);if(ex.gif)modes.push(['gif','Real demo']);if(ex.anim)modes.push(['d3','3D figure']);
   const mode=modes.find(m=>m[0]===stageMode)?stageMode:(modes[0]||['none'])[0];
-  const stage=mode==='anim'?`<canvas data-anim="${id}" data-fit="22" id="bigAnim" aria-label="Animated figure doing ${esc(ex.n)}; working muscles glow red"></canvas><div class="glowkey"><i></i>Glowing = working muscle</div>
-      <div class="stage-ctrl"><button id="playBtn" aria-label="Pause">${reduceMotion?ICON.play:ICON.pause}</button><div class="seg sm" id="speedSeg"><button data-sp="1" aria-pressed="true">Normal</button><button data-sp="0.5" aria-pressed="false">Slow</button></div></div>`
+  const stage=mode==='d3'?`<div class="v3" id="v3" aria-label="3D figure doing ${esc(ex.n)}. Drag to rotate."></div><div class="glowkey"><i></i>Drag to turn it. Glow = working muscle</div>
+      <div class="stage-ctrl"><div class="seg sm" id="v3view"><button data-v="three">3/4</button><button data-v="front">Front</button><button data-v="side">Side</button><button data-v="back">Back</button><button data-v="top">Top</button></div>
+      <button id="playBtn" aria-label="Pause">${reduceMotion?ICON.play:ICON.pause}</button><button id="slowBtn" aria-label="Slow motion" class="txtbtn">½×</button></div>`
     :mode==='gif'?`<img class="gifstage" src="${GIF_BASE+ex.gif}" alt="${esc(ex.n)} demonstration" onerror="this.outerHTML='<p class=&quot;offline&quot;>The demo needs an internet connection.</p>'"><span class="credit">${GIF_CREDIT}</span>`
     :mode==='own'?(isVid(own)?`<video src="${esc(own)}" autoplay muted loop playsinline controls></video>`:`<img src="${esc(own)}" alt="Your demo of ${esc(ex.n)}" class="ownimg">`)
     :`<div class="nomedia">${heatSVG(Object.fromEntries(ex.p.map(m=>[m,1]).concat((ex.s||[]).map(m=>[m,.45]))),[255,84,54],'Muscles worked')}</div>`;
@@ -3075,11 +3231,14 @@ function renderSheet(){
   h+=`<section class="block"><h3>${ICON.plan}Use it</h3><div class="row-actions"><button class="chipbtn" id="addToPlan">${ICON.plus} Add to a plan</button>
     <a class="chipbtn" href="https://www.youtube.com/results?search_query=${encodeURIComponent(ex.n.replace(/D'bell/,'dumbbell').replace(/ M\.$/,' machine')+' proper form')}" target="_blank" rel="noopener">${ICON.yt} Form videos</a>
     ${id.startsWith('c:')?`<button class="chipbtn" id="editCustom">${ICON.edit} Edit</button><button class="chipbtn" id="delCustom">${ICON.trash} Delete</button>`:''}</div>
-    <label class="fld top">Your own demo GIF or video link<span class="frow"><input id="ownMedia" type="url" placeholder="https://…/demo.gif" value="${esc(S.media[id]||'')}"><button class="chipbtn" id="saveMedia">Save</button></span><small class="muted">Paste a link to any GIF or MP4 you're allowed to use. It shows on this exercise everywhere in the app.</small></label></section>`;
+    <label class="fld top">Your own demo GIF or video link<span class="frow"><input id="ownMedia" type="url" placeholder="https://…/demo.gif" value="${esc(S.media[id]||'')}"><button class="chipbtn" id="saveMedia">Save</button></span><small class="muted">Paste a link to any GIF or MP4 you're allowed to use. It shows on this exercise everywhere in the app. To add a demo for everyone in the family, put the file in the website repository as <b>media/f/${mediaKey(id)}.gif</b> (women) or <b>media/m/${mediaKey(id)}.gif</b> (men).</small></label></section>`;
   const prev=i>0?exById(list[i-1]).n:'',next=i<len-1?exById(list[i+1]).n:'';
   h+=`<div class="pager"><button data-move="-1" ${i===0?'disabled':''}><small>Previous</small><span>${esc(prev)}</span></button><button data-move="1" ${i===len-1?'disabled':''}><small>Next</small><span>${esc(next)}</span></button></div>`;
   const body=$('#sheetBody');body.innerHTML=h;
   if(si>=0)bindTracker(si);
+  if(mode==='d3'){const c3=mount3D($('#v3'),id);$('#v3view').onclick=ev=>{const b=ev.target.closest('[data-v]');if(b)c3.view(b.dataset.v);};
+    $('#playBtn').onclick=()=>{c3.playing=!c3.playing;$('#playBtn').innerHTML=c3.playing?ICON.pause:ICON.play;};
+    $('#slowBtn').onclick=()=>{c3.speed=c3.speed===1?0.5:1;$('#slowBtn').classList.toggle('on',c3.speed!==1);};}
   requestAnimationFrame(()=>{mountAnims(body);const big=$('#bigAnim');if(big&&big._anim){const ha=big._anim;
     $('#playBtn').onclick=()=>{ha.playing=!ha.playing;$('#playBtn').innerHTML=ha.playing?ICON.pause:ICON.play;};
     $('#speedSeg').onclick=ev=>{const b=ev.target.closest('[data-sp]');if(!b)return;ha.speed=+b.dataset.sp;$('#speedSeg').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));};}});
@@ -3224,7 +3383,7 @@ function yToday(){
     <p class="eyebrow">${greet()}, ${esc(U.name.split(' ')[0])}</p><h1>${esc(nd.name)}</h1>
     <p>${esc(P.name)}. About ${mins} min, ${nd.items.length} steps: breathing, poses and relaxation.</p>
     <button class="cta" id="yStart">Start this flow</button></div>
-    <canvas class="yhero-fig" data-anim="${first.ex}" data-fit="12" aria-hidden="true"></canvas></section>
+    ${exById(first.ex).gif?`<img class="yhero-fig gif" src="${GIF_BASE+exById(first.ex).gif}" alt="">`:`<canvas class="yhero-fig" data-anim="${first.ex}" data-fit="12" aria-hidden="true"></canvas>`}</section>
   ${affirmCard()}
   <h2 class="sec">Breathe now</h2>
   <div class="btiles"><button class="btile hold" data-br="b_hold"><span class="ring"><i style="--p:${Math.min(1,pb/90)}"></i></span><b>Breath-hold challenge</b><small>${pb?`Your best: ${fmtClock(pb)}`:'Press and hold while you hold your breath'}</small></button>
@@ -3256,7 +3415,7 @@ function yPoses(){
     if(yPoseQ&&!(e.n+' '+(e.sk||'')).toLowerCase().includes(yPoseQ.toLowerCase()))return false;return true;});
   app.innerHTML=brand('Poses')+`<input class="search" id="ypq" type="search" placeholder="Search poses, e.g. warrior or Balasana" value="${esc(yPoseQ)}" aria-label="Search poses">
   <div class="chips">${cats.map(([k,l])=>`<button class="chip" data-yc="${k}" aria-pressed="${yPoseCat===k}">${l}</button>`).join('')}</div>
-  <div class="pgrid">${ids.map(id=>{const e=exById(id);return `<button class="pcard" data-pose="${id}"><span class="pfig">${e.anim?`<canvas data-anim="${id}" data-fit="10"></canvas>`:thumbHTML(e)}</span><b>${esc(e.n)}</b><small>${esc(e.sk||e.aka||'')}</small></button>`;}).join('')||'<p class="muted">No poses match.</p>'}</div>`;
+  <div class="pgrid">${ids.map(id=>{const e=exById(id);return `<button class="pcard" data-pose="${id}"><span class="pfig">${thumbHTML(e)}</span>${e.gif?'<span class="realtag">Real demo</span>':''}<b>${esc(e.n)}</b><small>${esc(e.sk||e.aka||'')}</small></button>`;}).join('')||'<p class="muted">No poses match.</p>'}</div>`;
   bindBrand();
   $('#ypq').oninput=e=>{yPoseQ=e.target.value;const p=e.target.selectionStart;yPoses();mountAnims(app);const n=$('#ypq');n.focus();n.setSelectionRange(p,p);};
   app.querySelectorAll('[data-yc]').forEach(b=>b.onclick=()=>{yPoseCat=b.dataset.yc;yPoses();mountAnims(app);});
@@ -3311,6 +3470,10 @@ function renderYogaWizard(){
   $('#ywGo').onclick=()=>{S.prefs=Object.assign({},ywiz);save();draft=yogaGenerate(Object.assign({seed:Date.now()},ywiz));go('plans','preview');};
 }
 
+function plVisual(ex,id){const own=mediaFor(ex);
+  if(!PL.pref3d||!ex.anim){if(own)return isVid(own)?`<video class="pl-gif" src="${esc(own)}" autoplay muted loop playsinline></video>`:`<img class="pl-gif" src="${esc(own)}" alt="">`;
+    if(ex.gif)return `<img class="pl-gif" src="${GIF_BASE+ex.gif}" alt="">`;}
+  if(ex.anim)return `<div class="v3" id="plV3"></div><span class="hint3">Drag to turn</span>`;return `<div class="pl-rest"><b>${esc(ex.n)}</b></div>`;}
 /* =========================================================
    GUIDED PLAYER (yoga flows, breathing, HIIT follow-along)
    ========================================================= */
@@ -3340,23 +3503,24 @@ function plGo(i){
   const s=PL.steps[i],ex=exById(s.ex||''),next=PL.steps.slice(i+1).find(x=>x.kind!=='rest');
   PL.t0=performance.now();PL.paused=false;PL.pausedAt=0;PL.br=s.kind==='breath'?breathRun(ex.breath,s.rounds):null;PL.lastPh=-1;PL.lastSec=-1;
   const vis=s.kind==='breath'?breathSVG(ex.breath):s.kind==='rest'?`<div class="pl-rest"><b>Rest</b><span>Next: ${esc(next?exById(next.ex).n:'')}</span></div>`:
-    (PL.mode==='hiit'&&ex.gif?`<img class="pl-gif" src="${GIF_BASE+ex.gif}" alt="">`:ex.anim?`<canvas data-anim="${s.ex}" data-fit="16"></canvas>`:ex.gif?`<img class="pl-gif" src="${GIF_BASE+ex.gif}" alt="">`:`<div class="pl-rest"><b>${esc(ex.n)}</b></div>`);
+    plVisual(ex,s.ex);
   const segs=PL.steps.map((x,k)=>x.kind==='rest'?'':`<i class="${k<i?'done':k===i?'cur':''}"></i>`).join('');
   $('#plBody').innerHTML=`<div class="pl">
    <div class="pl-top"><button class="iconbtn" id="plX" aria-label="End">${ICON.x}</button><div class="pl-prog">${segs}</div><button class="iconbtn" id="plV" aria-label="Voice">${U.settings.voice?'🔊':'🔈'}</button></div>
-   <div class="pl-stage ${s.kind}">${vis}</div>
+   <div class="pl-stage ${s.kind}">${vis}${(mediaFor(ex)||ex.gif)&&ex.anim&&s.kind!=='breath'&&s.kind!=='rest'?`<button class="chipbtn plswap" id="plSwap">${PL.pref3d?'Real demo':'3D figure'}</button>`:''}</div>
    <div class="pl-info"><small>${s.kind==='work'?`Round ${s.round} of ${s.of}`:s.side?esc(s.side):s.kind==='breath'?esc(ex.aka||''):s.kind==='rest'?'Catch your breath':esc(ex.sk||ex.aka||'')}</small><h2>${s.kind==='rest'?'Rest':esc(ex.n)}</h2>
      <p class="pl-cue" id="plCue">${s.kind==='breath'?'':s.meditate?'Sit quietly. Watch the breath come and go.':s.kind==='pose'?'Breathe in…':''}</p></div>
    <div class="pl-timer"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="trk"/><circle cx="50" cy="50" r="44" class="arc" id="plArc"/></svg><b id="plClock">${s.kind==='breath'?'':fmtClock(s.sec)}</b></div>
    <div class="pl-ctrl"><button class="iconbtn" id="plPrev" aria-label="Previous" ${i===0?'disabled':''}>${ICON.back}</button><button class="plplay" id="plPlay" aria-label="Pause">${ICON.pause}</button><button class="iconbtn" id="plNext" aria-label="Next" style="transform:scaleX(-1)">${ICON.back}</button></div>
    ${next?`<p class="pl-next">Next: ${esc(exById(next.ex).n)}${next.side?' ('+next.side.toLowerCase()+')':''}</p>`:'<p class="pl-next">Last one</p>'}
    ${s.kind==='pose'&&ex.steps?`<details class="pl-how"><summary>How to do it</summary><ol>${ex.steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></details>`:''}</div>`;
-  mountAnims($('#plBody'));
+  mountAnims($('#plBody'));if($('#plV3'))PL.c3=mount3D($('#plV3'),s.ex,{auto:true});
+  const sw=$('#plSwap');if(sw)sw.onclick=()=>{PL.pref3d=!PL.pref3d;const st=$('.pl-stage');st.innerHTML=plVisual(ex,s.ex)+st.querySelector('#plSwap').outerHTML;const n=$('#plV3');if(n)PL.c3=mount3D(n,s.ex,{auto:true});$('#plSwap').onclick=sw.onclick;$('#plSwap').textContent=PL.pref3d?'Real demo':'3D figure';};
   $('#plX').onclick=async()=>{PL.paused=true;const any=PL.done.size>0;if(!any){plClose();return;}if(await ask('End now? What you have done so far will be saved.','End and save')){plFinish();}else{PL.paused=false;PL.t0=performance.now()-PL.pausedAt;}};
   $('#plV').onclick=()=>{U.settings.voice=!U.settings.voice;save();$('#plV').textContent=U.settings.voice?'🔊':'🔈';};
   $('#plPrev').onclick=()=>plGo(Math.max(0,i-1-(PL.steps[i-1]&&PL.steps[i-1].kind==='rest'?1:0)));
   $('#plNext').onclick=()=>{PL.done.add(i);plGo(i+1);};
-  $('#plPlay').onclick=()=>{PL.paused=!PL.paused;if(PL.paused)PL.pausedAt=performance.now()-PL.t0;else PL.t0=performance.now()-PL.pausedAt;$('#plPlay').innerHTML=PL.paused?ICON.play:ICON.pause;const c=$('#plBody canvas');if(c&&c._anim)c._anim.playing=!PL.paused;};
+  $('#plPlay').onclick=()=>{PL.paused=!PL.paused;if(PL.paused)PL.pausedAt=performance.now()-PL.t0;else PL.t0=performance.now()-PL.pausedAt;$('#plPlay').innerHTML=PL.paused?ICON.play:ICON.pause;const c=$('#plBody canvas');if(c&&c._anim)c._anim.playing=!PL.paused;if(PL.c3)PL.c3.playing=!PL.paused;};
   speak(s.kind==='rest'?'Rest. Next, '+(next?exById(next.ex).n:''):s.kind==='breath'?ex.n:(s.side?ex.n+', '+s.side:ex.n));
   tone(440,520,0.25,0.05);
   const loop=()=>{PL.raf=requestAnimationFrame(loop);if(PL.paused)return;const el=(performance.now()-PL.t0)/1000;plTick(s,el);};loop();
