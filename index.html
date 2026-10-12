@@ -494,6 +494,10 @@ body:not([data-th^="yoga"]) .br-blob{fill:rgba(var(--acc),.55)}
 body[data-pl] .timer{z-index:2147483647}
 
 /* ---- v5: real demos + 3D ---- */
+.v3err{position:absolute;inset:auto 10px 58px 10px;background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:4px;z-index:3}
+.v3err b{font-weight:700}.v3err span{color:var(--gold);font-size:14px}.v3err small{color:var(--muted);font-size:13px}.v3err .chipbtn{align-self:flex-start;margin-top:4px}
+.chk3d{list-style:none;padding:0;margin:0}.chk3d li{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.chk3d li b{width:20px;text-align:center}
+.chk3d .okr b{color:var(--ok)}.chk3d .badr b{color:var(--muscle)}.chk3d small{display:block;color:var(--muted);font-size:13px}
 .snapw{display:block;width:100%;height:100%;position:relative}.snapw canvas{position:absolute;inset:0}.snapimg{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;animation:fadein .4s}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 span.yhero-fig.snapw,span.hero-anim.snapw{border-radius:18px;overflow:hidden}
@@ -930,7 +934,7 @@ hyper:AB({hip:[112,100],tA:158,hN:[126,128],fN:[52,150],ftN:115,eB:-1},{hip:[112
   bk(ctx){PR.line(ctx,[40,FLOOR],[58,154],5,COL.steelD);PR.line(ctx,[58,154],[124,106],5,COL.steelD);PR.line(ctx,[104,118],[104,FLOOR],5,COL.steelD);PR.line(ctx,[34,FLOOR-1],[150,FLOOR-1],4,COL.steelD);},
   fr(ctx){ctx.save();ctx.translate(119,107);ctx.rotate(-0.68);PR.rect(ctx,-14,0,28,9,COL.pad,4);ctx.restore();dot(ctx,[57,158],6,COL.pad);}}),
 
-benchpress:AB({hip:[128,138],tA:-90,hN:[84,84],fN:[165,183]},{hip:[128,138],tA:-90,hN:[92,128],fN:[165,183]},{hz:27,ez:24,v:'side',dur:3200,
+benchpress:AB({hip:[128,138],tA:-90,hN:[82,84],fN:[165,183]},{hip:[128,138],tA:-90,hN:[100,126],fN:[165,183]},{hz:27,ez:24,v:'side',dur:3200,
   bk(ctx){PR.post(ctx,64,60);PR.line(ctx,[64,78],[76,78],4,COL.steel);PR.bench(ctx,40,152,146);},
   fr(ctx,J){PR.plate(ctx,J.wN,18);}}),
 
@@ -2512,8 +2516,13 @@ function mount3D(el,id,opt){
     const ringM=new T.Mesh(new T.RingGeometry(178,181,72),new T.MeshBasicMaterial({color:new T.Color(ACC()),transparent:true,opacity:.35}));ringM.rotation.x=-Math.PI/2;ringM.position.y=.2;sc.add(ringM);
     /* figure: realistic human, or the simple figure if the model files are missing */
     let fig=null,human=null;
-    try{human=await buildHuman(T,sc,g,sec);}catch(e){human=null;console.warn('Human model unavailable, using simple figure:',e.message);}
+    let failWhy='';try{human=await buildHuman(T,sc,g,sec);}catch(e){human=null;failWhy=String(e&&e.message||e);console.warn('Human model unavailable:',failWhy);}
     if(!alive||!el.isConnected){ren.dispose();return;}
+    if(!human){try{ren.forceContextLoss();}catch(e){}ren.dispose();ctl.human=false;
+      if(opt.snapshot){if(ctl.onReady)ctl.onReady();return;}
+      const m=failWhy.match(/([\w.]+\.glb)\s+(\d+)/),why=m?`models/${m[1]} ${m[2]==='404'?'was not found on your site (404)':'could not be downloaded (error '+m[2]+')'}`:/loader/.test(failWhy)?'The 3D loader could not be downloaded. Check the internet connection.':'The 3D files could not be loaded. Check the internet connection.';
+      el.innerHTML=`<canvas data-anim="${id}" data-fit="22"></canvas><div class="v3err"><b>The 3D people didn't load</b><span>${esc(why)}</span><small>Upload the <b>models</b> folder next to index.html in your website repository, then reload. Settings → Check 3D setup tests every file.</small>${ex.gif?'<button class="chipbtn" data-v3gif>Show the real demo instead</button>':''}</div>`;
+      mountAnims(el);const gb=el.querySelector('[data-v3gif]');if(gb)gb.onclick=()=>{stageMode='gif';renderSheet();};return;}
     const GR=Object.assign(gripFor(id,ex),{eq:ex.equip||'',id});
     ctl.human=!!human;
     if(human)fig={update(o,L){poseHuman(human,o,L,GR);},setShow(v){human.skinned.forEach(m=>{if(m.userData.u)m.userData.u.show.value=v?(m.userData.glow||1):0;});}};
@@ -2572,7 +2581,7 @@ function mount3D(el,id,opt){
     ctl.dispose=()=>{alive=false;try{ren.forceContextLoss();}catch(e){}ren.dispose();io2.disconnect();ro2.disconnect();V3S.delete(ctl);};
     function loop(t){if(!alive||!el.isConnected){try{ren.forceContextLoss();}catch(e){}ren.dispose();io2.disconnect();ro2.disconnect();V3S.delete(ctl);return;}
       requestAnimationFrame(loop);const dt=Math.min(64,t-last);last=t;if(!vis)return;
-      if(ctl.playing)phase=(phase+dt/an.dur*ctl.speed)%1;if(ctl.auto)th+=dt*0.00025;pose();place();if(window.__focus&&human){const fp=human.bones[window.__focus].getWorldPosition(new T.Vector3());cam.position.copy(fp).add(new T.Vector3(Math.sin(th)*Math.cos(ph),Math.sin(ph),Math.cos(th)*Math.cos(ph)).multiplyScalar(window.__focusR||45));cam.lookAt(fp);}ren.render(sc,cam);}
+      if(ctl.playing)phase=(phase+dt/an.dur*ctl.speed)%1;if(window.__phaseNow!=null)phase=window.__phaseNow;if(ctl.auto)th+=dt*0.00025;pose();place();if(window.__focus&&human){const fp=human.bones[window.__focus].getWorldPosition(new T.Vector3());cam.position.copy(fp).add(new T.Vector3(Math.sin(th)*Math.cos(ph),Math.sin(ph),Math.cos(th)*Math.cos(ph)).multiplyScalar(window.__focusR||45));cam.lookAt(fp);}ren.render(sc,cam);}
     V3S.add(ctl);pose();place();ren.render(sc,cam);if(ctl.onReady)ctl.onReady();if(!opt.snapshot)requestAnimationFrame(loop);
   }
   return ctl;
@@ -2898,6 +2907,7 @@ function openSettings(){
   <h3 class="subh">Family saving</h3>
   <div class="setting"><div>Status<small id="stSyncTxt">${GH.key()?(GH.ok()?`Saving to ${esc(c.owner)}/${esc(c.repo)}/users/${esc(U.id)}.json`:'Key saved, but the repository was not detected.'):'Not set up: data is saved on this phone only.'}</small></div><button class="chipbtn" id="stSync">${GH.key()?'Manage':'Set up'}</button></div>
   <div class="row-actions"><button class="chipbtn" id="stExp">${ICON.dl} Download my user file</button><label class="chipbtn">${ICON.ul} Restore from a file<input type="file" id="stImp" accept="application/json,.json" hidden></label></div>
+  <h3 class="subh">3D people</h3><div class="setting"><div>3D setup<small>Tests the models folder, your phone's 3D support and the 3D library</small></div><button class="chipbtn" id="st3d">Check 3D setup</button></div>
   <h3 class="subh">Workouts</h3>
   <div class="setting"><div>Default rest between sets</div><div class="seg">${[30,45,60,90].map(s=>`<button data-r="${s}" aria-pressed="${S.settings.rest===s}">${s}s</button>`).join('')}</div></div>
   <div class="setting"><div>Start rest timer when I tick a set</div><button class="switch" role="switch" id="stAuto" aria-checked="${S.settings.autoRest}" aria-label="Auto rest timer"></button></div>
@@ -2914,7 +2924,7 @@ function openSettings(){
   tg('#stAuto',U.settings,'autoRest');tg('#stVoice',U.settings,'voice');tg('#stSound',U.settings,'sound');tg('#stWake',U.settings,'wake',applyWake);
   $('#stBar').onchange=e=>{U.profile.bar=+e.target.value||20;save();};
   $('#stPlates').onchange=e=>{const p=e.target.value.split(/[,\s]+/).map(Number).filter(x=>x>0);if(p.length){U.profile.plates=p;save();}};
-  $('#stExp').onclick=()=>downloadUser();
+  $('#stExp').onclick=()=>downloadUser();$('#st3d').onclick=()=>{d.close();check3D();};
   $('#stImp').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=async()=>{try{const o=JSON.parse(r.result);
       if(o.sections&&o.id){if(await ask(`Load "${o.name}" (@${o.id}) from this file into this phone? It is merged with what is already here.`,'Load')){U=normUser(mergeUsers(o,U.id===o.id?U:o));useSection(U.cur||'gym');save();d.close();toast('File loaded');show();}}
       else if(o.plans&&o.history){if(await ask(`Add ${o.history.length} workouts from this old backup to ${U.name}'s Gym section?`,'Add')){const g=U.sections.gym,ids=new Set(g.history.map(h=>String(h.id)));o.history.forEach(h=>{h.id=String(h.id);if(!ids.has(h.id))g.history.push(h);});g.history.sort((a,b)=>a.start-b.start);save();d.close();toast('Backup added');show();}}
@@ -2973,6 +2983,20 @@ async function afterLegacyCheck(){const L=legacyData();if(L&&U&&!U.legacyImporte
   if(await ask(`This phone has ${n} workout${n>1?'s':''} from the earlier version. Add ${n>1?'them':'it'} to ${U.name}'s account?`,'Add to my account')){const k=importLegacy();toast(k+' workouts added');show();}else{U.legacyImported=Date.now();legacyDone();save();}}}
 window.addEventListener('online',()=>{if(dirty||localStorage.getItem('kgt-dirty-'+(U&&U.id)))pushNow();});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&dirty&&U&&GH.key()){clearTimeout(saveT);pushNow();}});
+
+async function check3D(){
+  const d=$('#menu');$('#menuTitle').textContent='3D setup check';$('#menuBody').innerHTML='<p class="muted">Checking…</p>';d.showModal();
+  const rows=[];const ok=(b,l,x)=>rows.push(`<li class="${b?'okr':'badr'}"><b>${b?'✓':'✗'}</b><span>${l}${x?`<small>${x}</small>`:''}</span></li>`);
+  let gl=false;try{const c=document.createElement('canvas');gl=!!(c.getContext('webgl')||c.getContext('experimental-webgl'));}catch(e){}
+  ok(gl,'This phone supports 3D (WebGL)',gl?'':'3D views cannot work in this browser. Try Chrome or Safari.');
+  try{await loadThree();ok(true,'3D library downloaded');}catch(e){ok(false,'3D library downloaded','Check the internet connection.');}
+  try{await loadGLTFLib();ok(true,'3D model loader downloaded');}catch(e){ok(false,'3D model loader downloaded','Check the internet connection.');}
+  const files=['body_m.glb','shorts_m.glb','tank_m.glb','shoes_m.glb','hair_m.glb','body_f.glb','shorts_f.glb','bra_f.glb','shoes_f.glb','hair_f.glb'];
+  let missing=0;for(const f of files){try{const r=await fetch(MODEL_BASE+f,{method:'HEAD',cache:'no-store'});const kb=+r.headers.get('content-length')/1024|0;
+      if(r.ok)ok(true,'models/'+f,kb?kb+' KB':'');else{missing++;ok(false,'models/'+f,r.status===404?'Not found. Upload it into the models folder.':'Error '+r.status);}}
+    catch(e){missing++;ok(false,'models/'+f,'Could not be reached.');}}
+  $('#menuBody').innerHTML=`<ul class="chk3d">${rows.join('')}</ul>${missing?`<p class="callout warnbox">${missing} model file${missing>1?'s are':' is'} missing. In your GitHub repository, next to index.html, create a folder named exactly <b>models</b> and upload all 10 .glb files into it. Wait a minute for GitHub Pages to update, then reload the app.</p>`:'<p class="callout">Everything is in place. If a 3D view still looks wrong, send a screenshot.</p>'}`;
+}
 
 /* =========================================================
    SESSION LOGIC
